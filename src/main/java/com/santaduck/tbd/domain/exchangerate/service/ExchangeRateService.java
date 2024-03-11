@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 @Slf4j
@@ -30,8 +31,17 @@ public class ExchangeRateService {
             for (FetchedExchangeRateVo rate : fetched.getExchangeRates()) {
                 ExchangeRate e = ExchangeRate.builder()
                         .currencyCode(rate.getCurUnit())
-                        .rate(Double.parseDouble(rate.getTts().replaceAll(",", "")))
-                        .createdAt(LocalDateTime.now())
+                        .currencyName(rate.getCurNm())
+                        .ttb(Double.parseDouble(rate.getTtb().replaceAll(",", "")))
+                        .tts(Double.parseDouble(rate.getTts().replaceAll(",", "")))
+                        .tts(Double.parseDouble(rate.getTts().replaceAll(",", "")))
+                        .dealBaseRate(Double.parseDouble(rate.getDealBasR().replaceAll(",", "")))
+                        .bookPrice(Double.parseDouble(rate.getBkpr().replaceAll(",", "")))
+                        .yearFeeRate(Double.parseDouble(rate.getYyEfeeR().replaceAll(",", "")))
+                        .tenDaysFeeRate(Double.parseDouble(rate.getTenDdEfeeR().replaceAll(",", "")))
+                        .seoulDealBaseRate(Double.parseDouble(rate.getKftcDealBasR().replaceAll(",", "")))
+                        .seoulBookPrice(Double.parseDouble(rate.getKftcBkpr().replaceAll(",", "")))
+                        .modifiedAt(LocalDateTime.now())
                         .build();
 
                 repository.save(e);
@@ -41,7 +51,9 @@ public class ExchangeRateService {
         ExchangeRate exchangeRate = repository.findById(code).get();
         return GetExchangeRateResponse.builder()
                 .currencyCode(exchangeRate.getCurrencyCode())
-                .exchangeRate(exchangeRate.getRate())
+                .currencyName(exchangeRate.getCurrencyName())
+                .exchangeRate(exchangeRate.getTts())
+                .modifiedAt(exchangeRate.getModifiedAt())
                 .build();
     }
 }
