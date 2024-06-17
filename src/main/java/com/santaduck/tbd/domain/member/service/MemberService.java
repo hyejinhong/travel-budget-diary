@@ -2,6 +2,8 @@ package com.santaduck.tbd.domain.member.service;
 
 import com.santaduck.tbd.domain.member.dto.MemberRequest;
 import com.santaduck.tbd.domain.member.entity.Member;
+import com.santaduck.tbd.domain.member.exception.MemberException;
+import com.santaduck.tbd.domain.member.exception.MemberExceptionType;
 import com.santaduck.tbd.domain.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -23,12 +25,13 @@ public class MemberService {
         Optional<Member> emailCheck = memberRepository.findByEmail(request.getEmail());
 
         if (nicknameCheck.isPresent()) {
+            throw new MemberException(MemberExceptionType.DUPLICATE_NICKNAME);
         }
         if (emailCheck.isPresent()) {
+            throw new MemberException(MemberExceptionType.DUPLICATE_EMAIL);
         }
 
-        // 비밀번호 해시 처리
-        Long now = System.currentTimeMillis();
+        long now = System.currentTimeMillis();
         Member member = Member.builder()
                 .nickname(request.getNickname())
                 .password(encoder.encode(request.getPassword()))

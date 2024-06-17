@@ -1,10 +1,10 @@
 package com.santaduck.tbd.domain.member.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import jakarta.validation.constraints.NotBlank;
+import lombok.*;
 
-@Data
+@Getter @Setter
+@ToString(exclude = "password")
 @NoArgsConstructor
 public class MemberRequest {
     private String nickname;
