@@ -4,6 +4,8 @@ import com.santaduck.tbd.domain.exchangerate.dto.FetchedExchangeRateInfo;
 import com.santaduck.tbd.domain.exchangerate.dto.FetchedExchangeRateVo;
 import com.santaduck.tbd.domain.exchangerate.dto.GetExchangeRateResponse;
 import com.santaduck.tbd.domain.exchangerate.entity.ExchangeRate;
+import com.santaduck.tbd.domain.exchangerate.exception.ExchangeRateException;
+import com.santaduck.tbd.domain.exchangerate.exception.ExchangeRateExceptionType;
 import com.santaduck.tbd.domain.exchangerate.repository.ExchangeRateRedisRepository;
 import com.santaduck.tbd.domain.exchangerate.util.ExchangeRateUtil;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -38,7 +41,11 @@ public class ExchangeRateService {
             }
         }
 
-        ExchangeRate exchangeRate = repository.findById(code).get();
+        Optional<ExchangeRate> exchangeRateOptional = repository.findById(code);
+        if (exchangeRateOptional.isEmpty())
+            throw new ExchangeRateException(ExchangeRateExceptionType.NOT_FOUND);
+
+        ExchangeRate exchangeRate = exchangeRateOptional.get();
         return GetExchangeRateResponse.builder()
                 .currencyCode(exchangeRate.getCurrencyCode())
                 .exchangeRate(exchangeRate.getRate())
