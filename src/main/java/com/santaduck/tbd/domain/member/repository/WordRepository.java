@@ -12,6 +12,6 @@ public interface WordRepository extends JpaRepository<Word, Long> {
 
     List<Word> findByType(WordType type);
 
-    @Query("SELECT w.word FROM Word w WHERE w.type = :type ORDER BY RAND() LIMIT 1")
+    @Query(value = "SELECT w.word FROM Word w WHERE w.type = :type ORDER BY RAND() LIMIT 1")
     String findRandomWordByType(@Param("type") WordType type);
 }
