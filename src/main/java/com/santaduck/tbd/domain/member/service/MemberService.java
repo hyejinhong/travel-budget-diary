@@ -21,11 +21,11 @@ public class MemberService {
     private final BCryptPasswordEncoder encoder;
 
     public void join(MemberRequest request) {
-        Optional<Member> nicknameCheck = memberRepository.findByNickname(request.getNickname());
         Optional<Member> emailCheck = memberRepository.findByEmail(request.getEmail());
+        Optional<Member> memberIdCheck = memberRepository.findByMemberId(request.getMemberId());
 
-        if (nicknameCheck.isPresent()) {
-            throw new MemberException(MemberExceptionType.DUPLICATE_NICKNAME);
+        if (memberIdCheck.isPresent()) {
+            throw new MemberException(MemberExceptionType.DUPLICATE_MEMBER_ID);
         }
         if (emailCheck.isPresent()) {
             throw new MemberException(MemberExceptionType.DUPLICATE_EMAIL);
@@ -34,6 +34,7 @@ public class MemberService {
         long now = System.currentTimeMillis();
         Member member = Member.builder()
                 .nickname(request.getNickname())
+                .memberId(request.getMemberId())
                 .password(encoder.encode(request.getPassword()))
                 .email(request.getEmail())
                 .generatedAt(new Timestamp(now))

@@ -19,6 +19,8 @@ public class Member {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    @Column(length = 20, nullable = false)
+    private String memberId;
     @Column(length = 16, nullable = false)
     private String nickname;
     @Column(length = 256, nullable = false)

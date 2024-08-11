@@ -8,6 +8,7 @@ import lombok.*;
 @NoArgsConstructor
 public class MemberRequest {
     private String nickname;
+    private String memberId;
     private String password;
     private String email;
 }
